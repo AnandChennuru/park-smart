@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkSmart — Intelligent Parking Platform</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="index">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        🅿️ Park<span class="brand-accent">Smart</span>
+      </a>
+      <div class="nav-links">
+        <a href="demo.html">🔍 Demo</a>
+        <a href="#analytics" onclick="scrollToSection('analytics')">📊 Analytics</a>
+        <button class="tab-nav-btn" onclick="openAuthModal('customer')">🚗 Find Parking</button>
+        <button class="tab-nav-btn" onclick="openAuthModal('owner')">🏢 Owner Login</button>
+        <button class="tab-nav-btn" onclick="openAuthModal('admin')">🛡️ Admin</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-eyebrow">✨ Now with real-time slot tracking</div>
+      <h1>Smart Parking,<br><span class="gradient-text">Simplified.</span></h1>
+      <p>An intelligent platform connecting parking owners with drivers. Register your space or find the perfect spot in seconds.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" onclick="openAuthModal('customer')">🚗 Find Parking</button>
+        <button class="btn btn-outline btn-lg" onclick="openAuthModal('owner')">🏢 Register as Owner</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat" id="hStatOwners"><div class="val">0</div><div class="lbl">Parking Owners</div></div>
+        <div class="hero-stat" id="hStatLocations"><div class="val">0</div><div class="lbl">Parking Locations</div></div>
+        <div class="hero-stat" id="hStatBookings"><div class="val">0</div><div class="lbl">Bookings Made</div></div>
+        <div class="hero-stat" id="hStatSlots"><div class="val">0</div><div class="lbl">Total Slots</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section style="padding: 80px 24px; background: var(--white);">
+    <div class="container">
+      <h2 class="section-title text-center">Why ParkSmart?</h2>
+      <p class="section-subtitle text-center">Everything you need for hassle-free parking management</p>
+      <div class="features-grid mt-4">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">🧠</div>
+          <h3>Smart Allocation</h3>
+          <p>AI-powered algorithm finds the optimal slot based on distance, floor occupancy, and accessibility — all in one pass.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap" style="background:var(--success-light);">💰</div>
+          <h3>Dynamic Pricing</h3>
+          <p>Prices adjust in real-time based on demand, occupancy, and peak hours — fair for drivers, profitable for owners.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap" style="background:var(--info-light);">⏱️</div>
+          <h3>Minute Billing</h3>
+          <p>Pay only for exact time parked. Live timer, instant receipts, and automatic payment tracking built in.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap" style="background:var(--danger-light);">🚨</div>
+          <h3>Mispark Detection</h3>
+          <p>Automated alerts when vehicles are in wrong slots. Keeps your parking facility running smoothly.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap" style="background:var(--purple-light);">📊</div>
+          <h3>Owner Analytics</h3>
+          <p>Real-time dashboard with earnings, occupancy rates, daily and monthly reports for your parking business.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon-wrap" style="background:#FEF3C7;">🛡️</div>
+          <h3>Admin Control</h3>
+          <p>Full admin panel to manage users, monitor all bookings, view platform revenue, and maintain system health.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section style="padding: 80px 24px; background: var(--gray-50);">
+    <div class="container">
+      <h2 class="section-title text-center">How It Works</h2>
+      <p class="section-subtitle text-center">Get started in minutes</p>
+      <div class="grid-3 mt-4">
+        <div class="card text-center" style="position:relative;">
+          <div style="width:48px;height:48px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;margin:0 auto 16px;color:var(--gray-900);">1</div>
+          <h3 style="font-weight:700;margin-bottom:8px;">Sign Up</h3>
+          <p style="color:var(--gray-500);font-size:0.875rem;">Create a free account as a Customer, Parking Owner, or Admin.</p>
+        </div>
+        <div class="card text-center">
+          <div style="width:48px;height:48px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;margin:0 auto 16px;color:var(--gray-900);">2</div>
+          <h3 style="font-weight:700;margin-bottom:8px;">Browse or List</h3>
+          <p style="color:var(--gray-500);font-size:0.875rem;">Customers find nearby parking. Owners list their spaces with pricing.</p>
+        </div>
+        <div class="card text-center">
+          <div style="width:48px;height:48px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;margin:0 auto 16px;color:var(--gray-900);">3</div>
+          <h3 style="font-weight:700;margin-bottom:8px;">Book & Go</h3>
+          <p style="color:var(--gray-500);font-size:0.875rem;">Reserve instantly, get confirmation, and get an automatic receipt when done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ANALYTICS ===== -->
+  <section id="analytics" style="padding: 80px 24px; background: var(--white);">
+    <div class="container">
+      <h2 class="section-title text-center">📊 Platform Analytics</h2>
+      <p class="section-subtitle text-center">Real-time platform-wide statistics</p>
+      <div class="stats-grid" id="platformStats"></div>
+    </div>
+  </section>
+
+  <!-- ===== AUTH MODAL ===== -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal auth-modal">
+      <div class="modal-header">
+        <h2 id="authModalTitle">Sign In</h2>
+        <button class="modal-close" onclick="closeAuthModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Role selector -->
+        <div class="role-selector" id="roleSelectorWrap">
+          <button class="role-btn" id="roleBtn-customer" onclick="setAuthRole('customer')">
+            <span class="role-icon">🚗</span> Customer
+          </button>
+          <button class="role-btn" id="roleBtn-owner" onclick="setAuthRole('owner')">
+            <span class="role-icon">🏢</span> Owner
+          </button>
+          <button class="role-btn" id="roleBtn-admin" onclick="setAuthRole('admin')">
+            <span class="role-icon">🛡️</span> Admin
+          </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="modal-tabs" id="authTabs">
+          <button class="modal-tab active" onclick="switchAuthTab('login')">Login</button>
+          <button class="modal-tab" onclick="switchAuthTab('register')">Sign Up</button>
+          <button class="modal-tab" onclick="switchAuthTab('forgot')">Forgot Password</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <input type="hidden" id="loginRole" value="customer">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="loginEmail" required placeholder="your@email.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" required placeholder="Enter password" autocomplete="current-password">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign In →</button>
+          <p style="text-align:center;margin-top:14px;font-size:0.8rem;color:var(--gray-500);">
+            Don't have an account? <a style="color:var(--primary-dark);font-weight:600;cursor:pointer;" onclick="switchAuthTab('register')">Sign up free</a>
+          </p>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+          <input type="hidden" id="registerRole" value="customer">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="registerName" required placeholder="Your full name">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="registerEmail" required placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="registerPhone" required placeholder="10-digit number">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="registerPassword" required minlength="4" placeholder="Create a password (min 4 chars)">
+          </div>
+          <div id="ownerExtraFields" class="hidden">
+            <div class="form-group">
+              <label>Business / Parking Name</label>
+              <input type="text" id="registerBusiness" placeholder="e.g., City Center Parking">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Create Account →</button>
+          <p style="text-align:center;margin-top:14px;font-size:0.8rem;color:var(--gray-500);">
+            Already have an account? <a style="color:var(--primary-dark);font-weight:600;cursor:pointer;" onclick="switchAuthTab('login')">Sign in</a>
+          </p>
+        </form>
+
+        <!-- Forgot Password Form -->
+        <form id="forgotForm" class="hidden" onsubmit="handleForgotPassword(event)">
+          <p style="color:var(--gray-600);font-size:0.875rem;margin-bottom:20px;">Enter your email and we'll show you your password (demo mode).</p>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="forgotEmail" required placeholder="your@email.com">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Recover Password</button>
+          <p style="text-align:center;margin-top:14px;font-size:0.8rem;color:var(--gray-500);">
+            Remember it? <a style="color:var(--primary-dark);font-weight:600;cursor:pointer;" onclick="switchAuthTab('login')">Back to Login</a>
+          </p>
+          <div id="forgotResult" class="mt-2"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">🅿️ Park<span class="accent">Smart</span></div>
+        <p class="footer-desc">An intelligent parking platform connecting drivers with available spaces. Real-time tracking, smart allocation, and transparent pricing.</p>
+      </div>
+      <div>
+        <div class="footer-title">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="demo.html">Demo Parking</a></li>
+          <li><a href="#analytics" onclick="scrollToSection('analytics')">Analytics</a></li>
+          <li><a href="#" onclick="openAuthModal('customer')">Find Parking</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-title">For Owners</div>
+        <ul class="footer-links">
+          <li><a href="#" onclick="openAuthModal('owner')">Register Space</a></li>
+          <li><a href="#" onclick="openAuthModal('owner')">Owner Dashboard</a></li>
+          <li><a href="#" onclick="openAuthModal('owner')">View Reports</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <div class="footer-title">Contact</div>
+        <p>📧 support@parksmart.in</p>
+        <p>📞 +91 98765 43210</p>
+        <p>📍 Hyderabad, Telangana, India</p>
+        <p>🕐 24/7 Support Available</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>🅿️ ParkSmart &copy; 2025 — Intelligent Parking Platform. Built for modern India.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkSmart — Demo Parking</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="demo">
+
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">🅿️ Park<span class="brand-accent">Smart</span></a>
+      <div class="nav-links">
+        <a href="index.html">← Back to Home</a>
+        <button class="tab-nav-btn" onclick="window.location.href='index.html'">Get Started</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding: 32px 24px 60px;">
+    <div class="hero-eyebrow mb-3">🔍 Interactive Demo</div>
+    <h2 class="section-title">Downtown Mall Parking</h2>
+    <p class="section-subtitle">Explore ParkSmart's real-time slot grid, dynamic pricing, and intelligent allocation — no login required.</p>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="demoStats" style="margin: 24px 0;"></div>
+
+    <!-- Pricing -->
+    <h3 style="font-weight:700;margin-bottom:10px;font-size:1rem;">Dynamic Pricing</h3>
+    <div id="demoPricing" style="max-width:400px;margin-bottom:24px;"></div>
+
+    <!-- Vehicle select -->
+    <h3 style="font-weight:700;margin-bottom:10px;font-size:1rem;">Select Vehicle Type</h3>
+    <div class="vehicle-select" id="demoVehicleSelect" style="margin-bottom:16px;"></div>
+
+    <!-- Floor tabs -->
+    <h3 style="font-weight:700;margin-bottom:10px;font-size:1rem;">Floor View</h3>
+    <div id="demoFloorTabs" style="margin-bottom:8px;"></div>
+    <div id="demoSlotGrid"></div>
+    <div class="slot-legend mt-2">
+      <span><span class="legend-dot green"></span> Available</span>
+      <span><span class="legend-dot yellow"></span> Reserved</span>
+      <span><span class="legend-dot red"></span> Occupied</span>
+    </div>
+
+    <!-- Smart booking demo -->
+    <div class="card mt-4" style="max-width:500px;">
+      <h3 class="card-header">🧠 Try Smart Allocation</h3>
+      <p class="card-subtitle">Click below to let the AI algorithm pick the optimal slot.</p>
+      <button class="btn btn-primary mt-2" onclick="demoSmartBook()">🎯 Smart Allocate a Slot</button>
+      <div id="demoBookingResult" class="mt-2"></div>
+    </div>
+
+    <div class="card mt-3" style="max-width:500px;background:var(--primary-light);border-color:var(--primary);">
+      <h3 style="font-weight:700;font-size:1rem;margin-bottom:8px;">Ready to use ParkSmart?</h3>
+      <p style="font-size:0.875rem;color:var(--gray-600);margin-bottom:14px;">Sign up as a customer to book real parking spaces, or register as an owner to list your parking facility.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" onclick="window.location.href='index.html'">🚗 Sign Up as Customer</button>
+        <button class="btn btn-outline btn-sm" onclick="window.location.href='index.html'">🏢 Register as Owner</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <footer class="footer" style="padding:24px;">
+    <div style="text-align:center;"><p style="color:var(--gray-600);font-size:0.85rem;">🅿️ ParkSmart &copy; 2025 — Demo Mode</p></div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkSmart — Owner Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="owner">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">🅿️ Park<span class="brand-accent">Smart</span></a>
+      <div class="nav-links">
+        <button class="tab-nav-btn active" onclick="ownerNav('dashboard', this)">📊 Dashboard</button>
+        <button class="tab-nav-btn" onclick="ownerNav('create', this)">➕ Add Parking</button>
+        <button class="tab-nav-btn" onclick="ownerNav('parkings', this)">🏢 My Parkings</button>
+        <button class="tab-nav-btn" onclick="ownerNav('bookings', this)">🎫 Bookings</button>
+        <button class="tab-nav-btn" onclick="ownerNav('reports', this)">📈 Reports</button>
+        <div class="nav-user">
+          <span id="ownerGreeting"></span>
+          <span class="nav-role-badge role-owner">Owner</span>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top: 24px; padding-bottom: 40px;">
+
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page-section active" id="sec-dashboard">
+      <div class="flex-between mb-3">
+        <div>
+          <h2 class="section-title">📊 Dashboard Overview</h2>
+          <p class="section-subtitle">Your parking business at a glance</p>
+        </div>
+        <div id="ownerRefreshInfo" style="font-size:0.8rem;color:var(--gray-400);"></div>
+      </div>
+
+      <!-- Stats -->
+      <div id="ownerStats" class="stats-grid mb-4"></div>
+
+      <!-- Quick actions -->
+      <div class="quick-actions mb-4">
+        <button class="btn btn-primary" onclick="ownerNav('create')">➕ Add New Parking</button>
+        <button class="btn btn-secondary" onclick="ownerNav('bookings')">🎫 View Bookings</button>
+        <button class="btn btn-secondary" onclick="ownerNav('reports')">📈 View Reports</button>
+      </div>
+
+      <!-- Recent bookings preview -->
+      <h3 style="font-weight:700;margin-bottom:14px;font-size:1rem;">Recent Bookings</h3>
+      <div id="ownerRecentBookings"></div>
+    </div>
+
+    <!-- ===== CREATE PARKING ===== -->
+    <div class="page-section" id="sec-create">
+      <h2 class="section-title">➕ Register New Parking</h2>
+      <p class="section-subtitle">Add a new parking location to the platform</p>
+      <div class="card" style="max-width: 660px;">
+        <form id="createParkingForm" onsubmit="handleCreateParking(event)">
+          <div class="form-group">
+            <label>Parking Name</label>
+            <input type="text" id="cpName" required placeholder="e.g., City Center Parking">
+          </div>
+          <div class="form-group">
+            <label>Address</label>
+            <input type="text" id="cpAddress" required placeholder="Full address of the parking location">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Total Floors</label>
+              <input type="number" id="cpFloors" required min="1" max="10" value="2">
+            </div>
+            <div class="form-group">
+              <label>Price per Hour (₹)</label>
+              <input type="number" id="cpPrice" required min="1" step="0.5" value="50">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Rows per Floor</label>
+              <input type="number" id="cpRows" required min="1" max="26" value="4">
+              <span class="form-hint">Each row labeled A, B, C…</span>
+            </div>
+            <div class="form-group">
+              <label>Columns per Floor</label>
+              <input type="number" id="cpCols" required min="1" max="20" value="6">
+              <span class="form-hint">Slots numbered 1, 2, 3…</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Vehicle Types Supported</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" value="car" checked> 🚗 Car</label>
+              <label><input type="checkbox" value="bike"> 🏍️ Bike</label>
+              <label><input type="checkbox" value="ev"> ⚡ EV</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+              <input type="checkbox" id="cpDynamic" style="width:18px;height:18px;accent-color:var(--primary);">
+              Enable Dynamic Pricing
+            </label>
+            <span class="form-hint">Price adjusts based on occupancy and peak hours</span>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block mt-2">🏗️ Create Parking Location</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ===== MY PARKINGS ===== -->
+    <div class="page-section" id="sec-parkings">
+      <h2 class="section-title">🏢 My Parking Locations</h2>
+      <p class="section-subtitle">Manage your registered parking spaces</p>
+      <div id="ownerParkingsList"></div>
+    </div>
+
+    <!-- ===== BOOKINGS ===== -->
+    <div class="page-section" id="sec-bookings">
+      <div class="flex-between mb-3">
+        <div>
+          <h2 class="section-title">🎫 All Bookings</h2>
+          <p class="section-subtitle">Manage and approve customer bookings</p>
+        </div>
+        <div class="flex-gap">
+          <select id="ownerBookingFilter" onchange="renderOwnerBookings()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:0.85rem;font-weight:500;">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="pending">Pending</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+      <div id="ownerBookingsList"></div>
+    </div>
+
+    <!-- ===== REPORTS ===== -->
+    <div class="page-section" id="sec-reports">
+      <h2 class="section-title">📈 Reports</h2>
+      <p class="section-subtitle">Track your business performance</p>
+
+      <div class="flex-gap mb-3">
+        <button class="btn btn-primary btn-sm" onclick="renderReports('daily')">📅 Daily</button>
+        <button class="btn btn-secondary btn-sm" onclick="renderReports('monthly')">📆 Monthly</button>
+        <button class="btn btn-secondary btn-sm" onclick="renderReports('all')">📊 All Time</button>
+      </div>
+
+      <div id="reportsContainer"></div>
+    </div>
+
+  </div>
+
+  <!-- ===== SLOT MODAL ===== -->
+  <div class="modal-overlay" id="ownerSlotModal">
+    <div class="modal" style="max-width:860px;">
+      <div class="modal-header">
+        <h2 id="ownerSlotModalTitle">Slot Grid</h2>
+        <button class="modal-close" onclick="closeOwnerSlotModal()">✕</button>
+      </div>
+      <div class="modal-body" id="ownerSlotModalBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== BOOKING DETAIL MODAL ===== -->
+  <div class="modal-overlay" id="ownerBookingModal">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h2>🎫 Booking Details</h2>
+        <button class="modal-close" onclick="document.getElementById('ownerBookingModal').classList.remove('active')">✕</button>
+      </div>
+      <div class="modal-body" id="ownerBookingModalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">🅿️ Park<span class="accent">Smart</span></div>
+        <p class="footer-desc">Helping parking owners maximize revenue and efficiency.</p>
+      </div>
+      <div>
+        <div class="footer-title">Owner Resources</div>
+        <ul class="footer-links">
+          <li><a href="#">Pricing Guide</a></li>
+          <li><a href="#">Add More Slots</a></li>
+          <li><a href="#">Owner Support</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <div class="footer-title">Contact</div>
+        <p>📧 owners@parksmart.in</p>
+        <p>📞 +91 98765 43210</p>
+        <p>🕐 Mon-Sat 9AM–6PM</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>🅿️ ParkSmart &copy; 2025 — Owner Portal</p></div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

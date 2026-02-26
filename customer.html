@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkSmart — Customer Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="customer">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">🅿️ Park<span class="brand-accent">Smart</span></a>
+      <div class="nav-links">
+        <button class="tab-nav-btn active" onclick="custNav('browse', this)">🔍 Browse</button>
+        <button class="tab-nav-btn" onclick="custNav('bookings', this)">🎫 My Bookings</button>
+        <button class="tab-nav-btn" onclick="custNav('history', this)">📋 History</button>
+        <button class="tab-nav-btn" onclick="custNav('mispark', this)">🚨 Mispark</button>
+        <div class="nav-user">
+          <span id="custGreeting"></span>
+          <span class="nav-role-badge role-customer">Customer</span>
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" style="padding-top: 24px; padding-bottom: 40px;">
+
+    <!-- ===== BROWSE PARKINGS ===== -->
+    <div class="page-section active" id="sec-browse">
+      <div class="flex-between mb-3">
+        <div>
+          <h2 class="section-title">🔍 Available Parking</h2>
+          <p class="section-subtitle">Real-time available parking locations near you</p>
+        </div>
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="parkingSearch" placeholder="Search by name or area..." oninput="filterParkings(this.value)">
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex-gap mb-3" style="flex-wrap:wrap;">
+        <button class="btn btn-sm btn-outline" onclick="filterByVehicle('')" id="vf-all" style="border-color:var(--primary);background:var(--primary-light);color:var(--primary-dark);">All Types</button>
+        <button class="btn btn-sm btn-ghost" onclick="filterByVehicle('car')" id="vf-car">🚗 Car</button>
+        <button class="btn btn-sm btn-ghost" onclick="filterByVehicle('bike')" id="vf-bike">🏍️ Bike</button>
+        <button class="btn btn-sm btn-ghost" onclick="filterByVehicle('ev')" id="vf-ev">⚡ EV</button>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--gray-500);">
+          <span id="refreshTimer">🔄</span>
+          <button class="btn btn-sm btn-ghost" onclick="renderCustomerParkings()">Refresh</button>
+        </div>
+      </div>
+
+      <div id="customerParkingsList"></div>
+    </div>
+
+    <!-- ===== PARKING DETAIL + BOOKING ===== -->
+    <div class="page-section" id="sec-parking-detail">
+      <button class="btn btn-ghost btn-sm mb-3" onclick="custNav('browse')">← Back to Browse</button>
+      <div id="parkingDetailView"></div>
+    </div>
+
+    <!-- ===== ACTIVE BOOKINGS ===== -->
+    <div class="page-section" id="sec-bookings">
+      <h2 class="section-title">🎫 Active Bookings</h2>
+      <p class="section-subtitle">Your currently active parking sessions</p>
+      <div id="activeBookingsList"></div>
+    </div>
+
+    <!-- ===== BOOKING HISTORY ===== -->
+    <div class="page-section" id="sec-history">
+      <h2 class="section-title">📋 Booking History</h2>
+      <p class="section-subtitle">All your past parking sessions and receipts</p>
+      <div id="historyBookingsList"></div>
+    </div>
+
+    <!-- ===== MISPARK DETECTION ===== -->
+    <div class="page-section" id="sec-mispark">
+      <h2 class="section-title">🚨 Mispark Detection</h2>
+      <p class="section-subtitle">Verify your vehicle is in the correct assigned slot</p>
+      <div class="card" style="max-width: 500px;">
+        <form id="misparkForm" onsubmit="handleMisparkCheck(event)">
+          <div class="form-group">
+            <label>Select Your Active Booking</label>
+            <select id="misparkBookingSelect" required>
+              <option value="">-- Select an active booking --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Current Parked Slot (where your vehicle actually is)</label>
+            <input type="text" id="misparkCurrentSlot" required placeholder="e.g., F1-A3">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">🔍 Check Slot</button>
+        </form>
+        <div id="misparkResult"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== BOOKING FORM MODAL ===== -->
+  <div class="modal-overlay" id="bookingFormModal">
+    <div class="modal" style="max-width:520px;">
+      <div class="modal-header">
+        <h2>🎫 Book Parking Slot</h2>
+        <button class="modal-close" onclick="closeBookingFormModal()">✕</button>
+      </div>
+      <div class="modal-body" id="bookingFormModalBody"></div>
+    </div>
+  </div>
+
+  <!-- ===== RECEIPT MODAL ===== -->
+  <div class="modal-overlay" id="receiptModal">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal-header">
+        <h2>🧾 Parking Receipt</h2>
+        <button class="modal-close" onclick="closeReceiptModal()">✕</button>
+      </div>
+      <div class="modal-body" id="receiptModalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary btn-block" onclick="closeReceiptModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SLOT GRID MODAL ===== -->
+  <div class="modal-overlay" id="custSlotModal">
+    <div class="modal" style="max-width:820px;">
+      <div class="modal-header">
+        <h2 id="custSlotModalTitle">Select a Slot</h2>
+        <button class="modal-close" onclick="closeCustSlotModal()">✕</button>
+      </div>
+      <div class="modal-body" id="custSlotModalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">🅿️ Park<span class="accent">Smart</span></div>
+        <p class="footer-desc">Smart parking made simple for every driver.</p>
+      </div>
+      <div>
+        <div class="footer-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Report Issue</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <div class="footer-title">Contact</div>
+        <p>📧 support@parksmart.in</p>
+        <p>📞 +91 98765 43210</p>
+        <p>🕐 24/7 Support</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>🅿️ ParkSmart &copy; 2025 — Customer Portal</p></div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

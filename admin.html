@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ParkSmart — Admin Panel</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="admin">
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">🅿️ Park<span class="brand-accent">Smart</span> <span class="nav-role-badge role-admin">Admin</span></a>
+      <div class="nav-links">
+        <div class="nav-user">
+          <span id="adminGreeting"></span>
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="admin-layout">
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <h3>Admin Panel</h3>
+      </div>
+      <button class="admin-nav-item active" onclick="adminNav('overview', this)">
+        <span class="nav-icon">📊</span> Overview
+      </button>
+      <button class="admin-nav-item" onclick="adminNav('users', this)">
+        <span class="nav-icon">👥</span> Manage Users
+      </button>
+      <button class="admin-nav-item" onclick="adminNav('owners', this)">
+        <span class="nav-icon">🏢</span> Manage Owners
+      </button>
+      <button class="admin-nav-item" onclick="adminNav('parkings', this)">
+        <span class="nav-icon">📍</span> All Parkings
+      </button>
+      <button class="admin-nav-item" onclick="adminNav('bookings', this)">
+        <span class="nav-icon">🎫</span> All Bookings
+      </button>
+      <button class="admin-nav-item" onclick="adminNav('revenue', this)">
+        <span class="nav-icon">💰</span> Revenue
+      </button>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="admin-content">
+
+      <!-- OVERVIEW -->
+      <div class="admin-page active" id="ap-overview">
+        <h2 class="section-title">📊 Platform Overview</h2>
+        <p class="section-subtitle">System-wide statistics and health</p>
+        <div id="adminOverviewStats" class="stats-grid mb-4"></div>
+        <div class="grid-2">
+          <div>
+            <h3 style="font-weight:700;margin-bottom:14px;font-size:1rem;">Recent Registrations</h3>
+            <div id="adminRecentUsers"></div>
+          </div>
+          <div>
+            <h3 style="font-weight:700;margin-bottom:14px;font-size:1rem;">Recent Bookings</h3>
+            <div id="adminRecentBookings"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- USERS -->
+      <div class="admin-page" id="ap-users">
+        <div class="flex-between mb-3">
+          <div>
+            <h2 class="section-title">👥 Manage Users (Customers)</h2>
+            <p class="section-subtitle">View, block, or remove customer accounts</p>
+          </div>
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search users..." oninput="searchAdminUsers(this.value)">
+          </div>
+        </div>
+        <div id="adminUsersList"></div>
+      </div>
+
+      <!-- OWNERS -->
+      <div class="admin-page" id="ap-owners">
+        <div class="flex-between mb-3">
+          <div>
+            <h2 class="section-title">🏢 Manage Owners</h2>
+            <p class="section-subtitle">Manage parking owner accounts</p>
+          </div>
+          <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search owners..." oninput="searchAdminOwners(this.value)">
+          </div>
+        </div>
+        <div id="adminOwnersList"></div>
+      </div>
+
+      <!-- PARKINGS -->
+      <div class="admin-page" id="ap-parkings">
+        <h2 class="section-title">📍 All Parking Locations</h2>
+        <p class="section-subtitle">Overview of all registered parking spaces</p>
+        <div id="adminParkingsList"></div>
+      </div>
+
+      <!-- BOOKINGS -->
+      <div class="admin-page" id="ap-bookings">
+        <div class="flex-between mb-3">
+          <div>
+            <h2 class="section-title">🎫 All Bookings</h2>
+            <p class="section-subtitle">Monitor every booking on the platform</p>
+          </div>
+          <select id="adminBookingFilter" onchange="renderAdminBookings()" style="padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:0.85rem;">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div id="adminBookingsList"></div>
+      </div>
+
+      <!-- REVENUE -->
+      <div class="admin-page" id="ap-revenue">
+        <h2 class="section-title">💰 Revenue Analytics</h2>
+        <p class="section-subtitle">Platform-wide financial overview</p>
+        <div id="adminRevenueStats" class="stats-grid mb-4"></div>
+        <h3 style="font-weight:700;margin-bottom:14px;font-size:1rem;">Revenue by Parking Location</h3>
+        <div id="adminRevenueTable"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== USER DETAIL MODAL ===== -->
+  <div class="modal-overlay" id="adminUserModal">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h2>👤 User Details</h2>
+        <button class="modal-close" onclick="document.getElementById('adminUserModal').classList.remove('active')">✕</button>
+      </div>
+      <div class="modal-body" id="adminUserModalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="script.js"></script>
+</body>
+</html>
